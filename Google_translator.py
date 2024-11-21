@@ -1,17 +1,19 @@
 from googletrans import Translator
+import pyttsx3
 
 translator = Translator()
+engine = pyttsx3.init()
 
 language = {"bn": "Bangla",
             "en": "English",
-            "ko": "Koren",
+            "ko": "Korean",
             "fr": "French",
             "de": "German",
             "he": "Hebrew",
             "hi": "Hindi",
             "it": "Italian",
             "ja": "Japanese",
-            'la': "Latin",
+            "la": "Latin",
             "ms": "Malay",
             "ne": "Nepali",
             "ru": "Russian",
@@ -23,7 +25,6 @@ language = {"bn": "Bangla",
 allow = True  # variable to control correct language code input
 
 while allow:  # checking if language code is valid
-
     user_code = input(
         f"Please input desired language code. To see the language code list enter 'options' \n")
 
@@ -45,8 +46,8 @@ while True:  # starting translation loop
     string = input(
         "\nWrite the text you want to translate: \nTo exit the program write 'close'\n")
 
-    if string == "close":  # exit program command
-        print(f"\nHave a nice Day!")
+    if string.lower() == "close":  # exit program command
+        print(f"\nHave a nice day!")
         break
 
     # translating method from googletrans
@@ -54,8 +55,15 @@ while True:  # starting translation loop
 
     # printing translation
     print(f"\n{language[user_code]} translation: {translated.text}")
-    # printing pronunciation
-    print(f"Pronunciation : {translated.pronunciation}")
+    # printing pronunciation if available
+    if translated.pronunciation:
+        print(f"Pronunciation : {translated.pronunciation}")
+        engine.say(translated.pronunciation)
+    else:
+        print("No pronunciation available for this language.")
+        engine.say(translated.text)
+
+    engine.runAndWait()
 
     for i in language.items():  # checking if the source language is listed on language dict and printing it
         if translated.src == i[0]:
